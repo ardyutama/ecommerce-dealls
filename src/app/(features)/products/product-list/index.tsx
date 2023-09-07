@@ -59,8 +59,8 @@ export default function Table({ data }: { data: Products }) {
         const filtered = products.filter(product => {
             return (
                 (!filters.brand || product.brand.toLowerCase().includes(filters.brand.toLowerCase())) &&
-                (!filters.product || product.title.toLowerCase().includes(filters.product)) &&
-                (!filters.category || product.category.toLowerCase().includes(filters.category)) &&
+                (!filters.product || product.title.toLowerCase().includes(filters.product.toLowerCase())) &&
+                (!filters.category || product.category.toLowerCase().includes(filters.category.toLowerCase())) &&
                 (!filters.priceRangeMax ||product.price >= 0 && product.price <= parseFloat(filters.priceRangeMax))
             )
         })

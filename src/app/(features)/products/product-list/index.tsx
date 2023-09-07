@@ -28,6 +28,7 @@ interface PaginationProps {
 export default function Table({ data }: { data: Products }) {
     const products = data.products
     const [currentPage, setCurrentPage] = useState(1);
+
     const [filters, setFilters] = useState({
         brand: '',
         product: '',
@@ -41,6 +42,7 @@ export default function Table({ data }: { data: Products }) {
     const endIndex = startIndex + ITEMS_PER_PAGE;
     const [filteredList, setFilteredList] = useState<ProductType[]>([])
     const displayedItems = Object.values(filters).every(value => value == '') ? products.slice(startIndex, endIndex) : filteredList.slice(startIndex, endIndex)
+
     const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE)
 
     useEffect(() => {
@@ -50,18 +52,18 @@ export default function Table({ data }: { data: Products }) {
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const { name, value } = event.target;
         setFilters({ ...filters, [name]: value })
+        filterProduct()
     }
 
     const filterProduct = () => {
         const filtered = products.filter(product => {
             return (
-                (!filters.brand || product.brand.toLowerCase().includes(filters.brand)) &&
+                (!filters.brand || product.brand.toLowerCase().includes(filters.brand.toLowerCase())) &&
                 (!filters.product || product.title.toLowerCase().includes(filters.product)) &&
                 (!filters.category || product.category.toLowerCase().includes(filters.category)) &&
-                product.price >= 0 && product.price <= parseFloat(filters.priceRangeMax)
+                (!filters.priceRangeMax ||product.price >= 0 && product.price <= parseFloat(filters.priceRangeMax))
             )
         })
-        console.log(filters.priceRangeMax)
         setFilteredList(filtered)
     }
 
@@ -83,7 +85,6 @@ export default function Table({ data }: { data: Products }) {
                     <Image src={SearchIcon} alt='search' />
                     <input type='text' placeholder='Search Product' className='block outline-none' name='product' onChange={(event) => {
                         handleInputChange(event);
-                        filterProduct()
                     }} />
                 </div>
                 <div className='inline-block relative'>
@@ -98,28 +99,24 @@ export default function Table({ data }: { data: Products }) {
                                 <span>Brand</span>
                                 <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='brand' onChange={(event) => {
                                     handleInputChange(event);
-                                    filterProduct()
                                 }} />
                             </div>
                             <div className='flex gap-4 items-center justify-between'>
                                 <span>Product</span>
                                 <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='product' onChange={(event) => {
                                     handleInputChange(event);
-                                    filterProduct()
                                 }} />
                             </div>
                             <div className='flex gap-4 items-center justify-between'>
                                 <span>Price</span>
                                 <input className='px-3 py-1 block rounded border border-black bg-white w-1/2' type='text' name='priceRangeMax' onChange={(event) => {
                                     handleInputChange(event);
-                                    filterProduct()
                                 }} />
                             </div>
                             <div className='flex gap-4 items-center justify-between'>
                                 <span>Category</span>
                                 <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='category' onChange={(event) => {
                                     handleInputChange(event);
-                                    filterProduct()
                                 }} />
                             </div>
                         </div>

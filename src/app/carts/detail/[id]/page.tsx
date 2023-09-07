@@ -6,7 +6,8 @@ type CartList = {
     products: ProductType[],
     discountedTotal: number,
     totalProducts: number,
-    totalQuantity: number
+    totalQuantity: number,
+    userId: number
 }
 
 type ProductType = {
@@ -42,6 +43,7 @@ type ProductType = {
 
 export default async function DetailPage({params}: {params: {id: string}}){
       const data = await getCartsDetail(params.id)
+      console.log(data)
     return(
         <>
             <CartDetail data={data} />

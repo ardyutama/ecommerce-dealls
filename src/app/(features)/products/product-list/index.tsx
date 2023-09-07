@@ -45,14 +45,20 @@ export default function Table({ data }: { data: Products }) {
 
     const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE)
 
+    useEffect(()=> {
+        const searchData = JSON.parse(localStorage.getItem('filters')||'[]')
+        setFilters(searchData)
+    },[])
+
     useEffect(() => {
         filterProduct()
     }, [filters])
-
+    
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const { name, value } = event.target;
+        
         setFilters({ ...filters, [name]: value })
-        filterProduct()
+        
     }
 
     const filterProduct = () => {
@@ -64,6 +70,7 @@ export default function Table({ data }: { data: Products }) {
                 (!filters.priceRangeMax ||product.price >= 0 && product.price <= parseFloat(filters.priceRangeMax))
             )
         })
+        localStorage.setItem('filters', JSON.stringify(filters))
         setFilteredList(filtered)
     }
 
@@ -74,8 +81,8 @@ export default function Table({ data }: { data: Products }) {
         handleNextPage: () => {
             setCurrentPage(prevPage => Math.max(prevPage + 1, 1));
         },
-        currentPage: currentPage, // Replace with the actual current page number
-        totalPages: totalPages, // Replace with the actual total number of pages
+        currentPage: currentPage, 
+        totalPages: totalPages, 
     };
 
     return (
@@ -97,25 +104,25 @@ export default function Table({ data }: { data: Products }) {
                             <p>Search By:</p>
                             <div className='flex gap-4 items-center justify-between'>
                                 <span>Brand</span>
-                                <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='brand' onChange={(event) => {
+                                <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='brand' value={filters.brand} onChange={(event) => {
                                     handleInputChange(event);
                                 }} />
                             </div>
                             <div className='flex gap-4 items-center justify-between'>
                                 <span>Product</span>
-                                <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='product' onChange={(event) => {
+                                <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='product' value={filters.product} onChange={(event) => {
                                     handleInputChange(event);
                                 }} />
                             </div>
                             <div className='flex gap-4 items-center justify-between'>
                                 <span>Price</span>
-                                <input className='px-3 py-1 block rounded border border-black bg-white w-1/2' type='text' name='priceRangeMax' onChange={(event) => {
+                                <input className='px-3 py-1 block rounded border border-black bg-white w-1/2' type='text' name='priceRangeMax' value={filters.priceRangeMax} onChange={(event) => {
                                     handleInputChange(event);
                                 }} />
                             </div>
                             <div className='flex gap-4 items-center justify-between'>
                                 <span>Category</span>
-                                <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='category' onChange={(event) => {
+                                <input className='px-3 py-1 block rounded border border-black bg-white' type='text' name='category' value={filters.category} onChange={(event) => {
                                     handleInputChange(event);
                                 }} />
                             </div>
